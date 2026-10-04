@@ -39,11 +39,9 @@ em{color:var(--green)}
 .intro p{max-width:620px}
 .socials{text-align:center;margin:8px 0 18px;clear:both}
 .player{padding:12px 11px 14px;margin:0 0 21px;box-shadow:0 0 110px 20px #87ff870e;background:#111}
-.player .frame{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line);overflow:hidden}
-.player .frame>div,.player .frame>iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player .frame{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line);overflow:hidden;cursor:pointer;-webkit-user-select:none;user-select:none}
+.player .frame>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;display:block;pointer-events:none;-webkit-user-select:none;user-select:none}
 .player .frame::after{content:'';position:absolute;inset:0;z-index:2;cursor:pointer}
-.vcover{position:absolute;inset:0;z-index:3;background:#0a0a0a;opacity:1;pointer-events:none;transition:opacity .5s ease}
-.vcover.hide{opacity:0}
 .player .now{margin:10px 0 0;line-height:15px;color:var(--cyan)}
 .sound{margin:10px 0 0;font:inherit;color:#000;background:var(--green);border:0;padding:5px 10px;cursor:pointer}
 .sound:hover{background:var(--cyan)}
@@ -132,7 +130,7 @@ h1{font-size:23px}
 </div>
 <div class="socials"><a href="https://github.com/Rito367">GitHub</a> | <a href="#projects">Projects</a> | <a href="https://github.com/Rito367?tab=repositories">Repositories</a> | <a href="#contact">Contact</a></div>
 </div>
-<fieldset class="player"><legend>Now playing</legend><div class="frame"><div id="yt-player"></div><div id="vcover" class="vcover"></div></div><button type="button" id="sound-btn" class="sound" hidden>[ sound off · click to unmute ]</button><p class="now">♪ 告五人 Accusefive — 帶我去找夜生活 Night life.Take us to the light · <a href="https://www.youtube.com/watch?v=W9Fq1HC_5hg">watch on YouTube</a></p></fieldset>
+<fieldset class="player"><legend>Now playing</legend><div class="frame" oncontextmenu="return false;"><video id="video-player" src="videoplayback.mp4#t=18" autoplay muted playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noplaybackrate nofullscreen" tabindex="-1" oncontextmenu="return false;"></video></div><button type="button" id="sound-btn" class="sound">[ sound off · click to unmute ]</button></fieldset>
 <div class="terminal" aria-label="Interactive portfolio terminal">
 <div class="command"><span>$ </span><span id="typed"></span><span id="boot-cursor" class="cursor" aria-hidden="true"></span></div>
 <div id="terminal-output" class="output">
@@ -172,14 +170,20 @@ const input=document.getElementById('terminal-input'),history=document.getElemen
 const replies={help:'Available commands: help, about, projects, github, contact, clear.','about':"I'm Rito. I build AI projects, experiment with code, and learn by making things.",'projects':'Project Wonyoung — personal AI assistant (private).\nRito367.github.io — this portfolio.\nSee the Projects panel for more.','github':'https://github.com/Rito367','contact':'Find me at https://github.com/Rito367\nWebsite feedback: use the portfolio repository issues.'};
 document.getElementById('terminal-form').addEventListener('submit',event=>{event.preventDefault();const raw=input.value.trim();if(!raw)return;previous.push(raw);position=previous.length;input.value='';const cmd=raw.toLowerCase();if(cmd==='clear'){history.replaceChildren();output.hidden=true;return;}const row=document.createElement('div');row.className='response';const line=document.createElement('div');line.className='green';line.textContent='$ '+raw;const answer=document.createElement('div');answer.textContent=replies[cmd]||'Command not found: '+raw+'. Type help for available commands.';row.append(line,answer);history.append(row);input.scrollIntoView({block:'nearest'});});
 input.addEventListener('keydown',event=>{if(event.key==='ArrowUp'){event.preventDefault();position=Math.max(0,position-1);input.value=previous[position]||''}else if(event.key==='ArrowDown'){event.preventDefault();position=Math.min(previous.length,position+1);input.value=previous[position]||''}});
-let ytPlayer=null,revealed=false;const soundBtn=document.getElementById('sound-btn');
-function updateSoundBtn(){if(ytPlayer&&ytPlayer.isMuted)soundBtn.textContent=ytPlayer.isMuted()?'[ sound off · click to unmute ]':'[ sound on · click to mute ]'}
-function toggleSound(){if(!ytPlayer||!ytPlayer.unMute)return;if(ytPlayer.isMuted()){ytPlayer.unMute();ytPlayer.setVolume(100);ytPlayer.playVideo()}else{ytPlayer.mute()}updateSoundBtn()}
+const START_AT=18;
+const video=document.getElementById('video-player'),soundBtn=document.getElementById('sound-btn');
+function updateSoundBtn(){if(video)soundBtn.textContent=video.muted?'[ sound off · click to unmute ]':'[ sound on · click to mute ]'}
+function toggleSound(){if(!video)return;video.muted=!video.muted;if(!video.muted){video.volume=1.0;video.play().catch(()=>{})}updateSoundBtn()}
 soundBtn.addEventListener('click',toggleSound);
 document.querySelector('.player .frame').addEventListener('click',toggleSound);
-const START_AT=20;
-window.onYouTubeIframeAPIReady=()=>{ytPlayer=new YT.Player('yt-player',{videoId:'W9Fq1HC_5hg',host:'https://www.youtube-nocookie.com',playerVars:{autoplay:1,mute:1,start:START_AT,controls:0,disablekb:1,fs:0,iv_load_policy:3,modestbranding:1,playsinline:1,rel:0},events:{onReady:e=>{e.target.mute();e.target.playVideo();soundBtn.hidden=false;updateSoundBtn()},onStateChange:e=>{const cover=document.getElementById('vcover');if(e.data===YT.PlayerState.PLAYING){if(!revealed){setTimeout(()=>{if(cover)cover.classList.add('hide');revealed=true},500)}else if(cover){cover.classList.add('hide')}}else if(e.data===YT.PlayerState.ENDED){if(cover)cover.classList.remove('hide');revealed=false;e.target.seekTo(START_AT,true);e.target.playVideo()}else if(e.data===YT.PlayerState.PAUSED&&!document.hidden){e.target.playVideo()}}}})};
-const ytScript=document.createElement('script');ytScript.src='https://www.youtube.com/iframe_api';document.head.append(ytScript);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&video&&video.paused)video.play().catch(()=>{})});
+if(video){
+  const setStart=()=>{if(video.currentTime<START_AT)video.currentTime=START_AT;video.play().catch(()=>{});updateSoundBtn()};
+  if(video.readyState>=1)setStart();
+  else video.addEventListener('loadedmetadata',setStart,{once:true});
+  video.addEventListener('timeupdate',()=>{if(video.duration&&video.currentTime>=video.duration-0.2){video.currentTime=START_AT;video.play().catch(()=>{})}});
+  video.addEventListener('ended',()=>{video.currentTime=START_AT;video.play().catch(()=>{})});
+}
 </script>
 <script type="module">
 import * as THREE from 'three';
