@@ -1,0 +1,15 @@
+RITO
+====
+AI, code, and personal projects.
+
+Hey, I'm Rito. Welcome to my corner of the internet.
+
+Projects
+  Project Wonyoung: personal AI assistant (private repository)
+  Portfolio: https://github.com/Rito367/Rito367.github.io
+
+GitHub: https://github.com/Rito367
+Website: https://Rito367.github.io/
+
+This is a static GitHub Pages site. Open the website in a browser
+for the animated terminal and navigation.
