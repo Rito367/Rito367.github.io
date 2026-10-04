@@ -33,6 +33,7 @@ em{color:var(--green)}
 .col .resource:last-child{padding-bottom:0}
 .col .resource h2{font-size:17px;margin-bottom:10px}
 .col .resource p{margin-bottom:10px}
+.hero{border:1px solid #626262;background:#0a0a0a;padding:22px 22px 4px;margin:0 0 21px;box-shadow:0 0 80px 10px #87ff870a}
 .intro{min-height:128px}
 .avatar{float:right;border-radius:50%;width:128px;height:128px;margin:0 0 10px 32px;object-fit:cover;background:#111}
 .intro p{max-width:620px}
@@ -40,20 +41,21 @@ em{color:var(--green)}
 .player{padding:12px 11px 14px;margin:0 0 21px;box-shadow:0 0 110px 20px #87ff870e;background:#111}
 .player .frame{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line)}
 .player .frame>div,.player .frame>iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player .frame::after{content:'';position:absolute;inset:0;z-index:2;cursor:default}
 .player .now{margin:10px 0 0;line-height:15px;color:var(--cyan)}
 .sound{margin:10px 0 0;font:inherit;color:#000;background:var(--green);border:0;padding:5px 10px;cursor:pointer}
 .sound:hover{background:var(--cyan)}
-.terminal{position:relative;background:#111;border:1px solid var(--line);padding:5px;min-height:380px;box-shadow:0 0 110px 20px #87ff870e;font:13px/15px 'Fira Mono',monospace;overflow:hidden}
+.terminal{position:relative;background:#111;border:1px solid var(--line);padding:5px;box-shadow:0 0 110px 20px #87ff870e;font:13px/15px 'Fira Mono',monospace;overflow:hidden}
 .command{height:30px;white-space:nowrap;overflow:hidden}
 .cursor{display:inline-block;width:8px;height:14px;background:var(--ink);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .output{padding:9px 15px 24px;animation:appear .3s ease}
 @keyframes appear{from{opacity:0}to{opacity:1}}
-.banner{display:flex;gap:48px;align-items:center;margin:0 24px 24px}
+.banner{display:flex;gap:48px;align-items:flex-start;margin:0 24px 24px}
 .pixel-logo{width:228px;flex-shrink:0}
 .pixel-logo svg{display:block;width:100%;height:auto}
-.stripes{height:24px;margin-top:8px;background:linear-gradient(#d70000 0 25%,#ff3b00 25% 50%,#ff8700 50% 75%,#ffbf00 75%)}
-.banner-copy{min-width:0}
+.pixel-logo .flag{display:block;width:100%;height:auto;margin-top:8px}
+.banner-copy{min-width:0;padding-top:4px}
 .banner-copy p{margin:0 0 15px;line-height:15px}
 .green{color:var(--green)}.cyan{color:var(--cyan)}.pink{color:var(--pink)}.muted{color:#777}
 .news p{margin:0}
@@ -97,7 +99,9 @@ h1{font-size:23px}
 .socials{line-height:23px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important}html{scroll-behavior:auto}}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.55}
 </style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
 <div id="container">
@@ -116,6 +120,7 @@ h1{font-size:23px}
 </aside>
 
 <section class="col col-center" aria-labelledby="home-title">
+<div class="hero">
 <h1 id="home-title">&gt; Rito</h1>
 <div class="intro">
 <img class="avatar" src="https://avatars.githubusercontent.com/u/323446796?s=256" width="128" height="128" alt="Rito's GitHub avatar">
@@ -124,12 +129,13 @@ h1{font-size:23px}
 <p>** My portfolio is now live! ** Explore what I'm working on, or find my public repositories on <a href="https://github.com/Rito367?tab=repositories">GitHub</a>.</p>
 </div>
 <div class="socials"><a href="https://github.com/Rito367">GitHub</a> | <a href="#projects">Projects</a> | <a href="https://github.com/Rito367?tab=repositories">Repositories</a> | <a href="#contact">Contact</a></div>
-<fieldset class="player"><legend>Now playing</legend><div class="frame"><div id="yt-player"></div></div><button type="button" id="sound-btn" class="sound" hidden>[ click for sound ]</button><p class="now">♪ 告五人 Accusefive — 帶我去找夜生活 Night life.Take us to the light · <a href="https://www.youtube.com/watch?v=W9Fq1HC_5hg">watch on YouTube</a></p></fieldset>
+</div>
+<fieldset class="player"><legend>Now playing</legend><div class="frame"><div id="yt-player"></div></div><button type="button" id="sound-btn" class="sound" hidden>[ sound off · click to unmute ]</button><p class="now">♪ 告五人 Accusefive — 帶我去找夜生活 Night life.Take us to the light · <a href="https://www.youtube.com/watch?v=W9Fq1HC_5hg">watch on YouTube</a></p></fieldset>
 <div class="terminal" aria-label="Interactive portfolio terminal">
 <div class="command"><span>$ </span><span id="typed"></span><span id="boot-cursor" class="cursor" aria-hidden="true"></span></div>
 <div id="terminal-output" class="output">
 <div class="banner">
-<div class="pixel-logo" aria-label="Rito"><svg viewBox="0 0 29 7" role="img" aria-label="RITO" shape-rendering="crispEdges"><path fill="#ffd7af" d="M0 0h5v1H0z M0 1h1v5H0z M5 1h1v2H5z M1 3h4v1H1z M3 4h1v1H3z M4 5h1v1H4z M5 6h1v1H5z M0 6h1v1H0z M8 0h5v1H8z M10 1h1v5h-1z M8 6h5v1H8z M15 0h6v1h-6z M17 1h2v6h-2z M24 0h4v1h-4z M23 1h1v5h-1z M28 1h1v5h-1z M24 6h4v1h-4z"/></svg><div class="stripes"></div></div>
+<div class="pixel-logo" aria-label="Rito"><svg viewBox="0 0 29 7" role="img" aria-label="RITO" shape-rendering="crispEdges"><path fill="#ffd7af" d="M0 0h5v1H0z M0 1h1v5H0z M5 1h1v2H5z M1 3h4v1H1z M3 4h1v1H3z M4 5h1v1H4z M5 6h1v1H5z M0 6h1v1H0z M8 0h5v1H8z M10 1h1v5h-1z M8 6h5v1H8z M15 0h6v1h-6z M17 1h2v6h-2z M24 0h4v1h-4z M23 1h1v5h-1z M28 1h1v5h-1z M24 6h4v1h-4z"/></svg><svg class="flag" viewBox="0 0 810 540" role="img" aria-label="Flag of Singapore"><defs><polygon id="star" points="0,-24 5.41,-7.44 22.82,-7.42 8.75,2.84 14.11,19.42 0,9.2 -14.11,19.42 -8.75,2.84 -22.82,-7.42 -5.41,-7.44"/></defs><rect width="810" height="270" fill="#ed2939"/><rect y="270" width="810" height="270" fill="#fff"/><circle cx="210" cy="135" r="100" fill="#fff"/><circle cx="250" cy="135" r="82" fill="#ed2939"/><g fill="#fff"><use href="#star" transform="translate(355 80) scale(1.25)"/><use href="#star" transform="translate(407.3 118) scale(1.25)"/><use href="#star" transform="translate(387.3 179.5) scale(1.25)"/><use href="#star" transform="translate(322.7 179.5) scale(1.25)"/><use href="#star" transform="translate(302.7 118) scale(1.25)"/></g></svg></div>
 <div class="banner-copy"><p>Rito's corner of the internet<br>AI, code, and personal projects<br><a href="https://github.com/Rito367">github.com/Rito367</a></p><p>src: <a href="https://github.com/Rito367/Rito367.github.io">portfolio repository</a></p></div>
 </div>
 <div class="legend-title">Legend</div>
@@ -166,12 +172,120 @@ document.getElementById('terminal-form').addEventListener('submit',event=>{event
 input.addEventListener('keydown',event=>{if(event.key==='ArrowUp'){event.preventDefault();position=Math.max(0,position-1);input.value=previous[position]||''}else if(event.key==='ArrowDown'){event.preventDefault();position=Math.min(previous.length,position+1);input.value=previous[position]||''}});
 // Music video: browsers only allow autoplay when muted, so start muted and unmute on the first user gesture.
 let ytPlayer=null,unlocked=false,gesture=false;const soundBtn=document.getElementById('sound-btn');
-function unlockSound(){gesture=true;if(unlocked||!ytPlayer||!ytPlayer.unMute)return;unlocked=true;ytPlayer.unMute();ytPlayer.setVolume(100);ytPlayer.playVideo();soundBtn.hidden=true;['pointerdown','keydown','touchstart'].forEach(t=>document.removeEventListener(t,unlockSound,true))}
-['pointerdown','keydown','touchstart'].forEach(t=>document.addEventListener(t,unlockSound,true));
-soundBtn.addEventListener('click',unlockSound);
+const gestureEvents=['pointerdown','keydown','touchstart'];
+function updateSoundBtn(){if(ytPlayer&&ytPlayer.isMuted)soundBtn.textContent=ytPlayer.isMuted()?'[ sound off · click to unmute ]':'[ sound on · click to mute ]'}
+function doUnlock(){unlocked=true;ytPlayer.unMute();ytPlayer.setVolume(100);ytPlayer.playVideo();gestureEvents.forEach(t=>document.removeEventListener(t,unlockSound,true));updateSoundBtn()}
+function unlockSound(e){gesture=true;if(e&&e.target===soundBtn)return;if(unlocked||!ytPlayer||!ytPlayer.unMute)return;doUnlock()}
+gestureEvents.forEach(t=>document.addEventListener(t,unlockSound,true));
+soundBtn.addEventListener('click',()=>{if(!ytPlayer||!ytPlayer.unMute)return;if(!unlocked)doUnlock();else{if(ytPlayer.isMuted())ytPlayer.unMute();else ytPlayer.mute();updateSoundBtn()}});
 const START_AT=20;
-window.onYouTubeIframeAPIReady=()=>{ytPlayer=new YT.Player('yt-player',{videoId:'W9Fq1HC_5hg',host:'https://www.youtube-nocookie.com',playerVars:{autoplay:1,mute:1,start:START_AT,playsinline:1,rel:0},events:{onReady:e=>{e.target.mute();e.target.playVideo();if(gesture)unlockSound();else soundBtn.hidden=false},onStateChange:e=>{if(e.data===YT.PlayerState.ENDED){e.target.seekTo(START_AT,true);e.target.playVideo()}}}})};
+window.onYouTubeIframeAPIReady=()=>{ytPlayer=new YT.Player('yt-player',{videoId:'W9Fq1HC_5hg',host:'https://www.youtube-nocookie.com',playerVars:{autoplay:1,mute:1,start:START_AT,controls:0,disablekb:1,fs:0,iv_load_policy:3,modestbranding:1,playsinline:1,rel:0},events:{onReady:e=>{e.target.mute();e.target.playVideo();soundBtn.hidden=false;if(gesture)doUnlock();else updateSoundBtn()},onStateChange:e=>{if(e.data===YT.PlayerState.ENDED){e.target.seekTo(START_AT,true);e.target.playVideo()}else if(e.data===YT.PlayerState.PAUSED&&!document.hidden){e.target.playVideo()}}}})};
 const ytScript=document.createElement('script');ytScript.src='https://www.youtube.com/iframe_api';document.head.append(ytScript);
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+// Particle Earth background. Skipped for reduced-motion visitors and when WebGL is unavailable.
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  try{initBackground()}catch(err){console.warn('Background disabled:',err)}
+}
+
+function initBackground(){
+  // CONFIG
+  const COUNT=matchMedia('(max-width: 800px)').matches?8000:20000;
+  const SPEED_MULT=1;
+  const PLANET=50,ROT=0.4,CLOUD_DENSITY=0.4,CLOUD_ALT=1.8,LAND=0.35,ATMO=1.2;
+
+  // SETUP
+  const scene=new THREE.Scene();
+  scene.fog=new THREE.FogExp2(0x000000,0.01);
+  const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,2000);
+  camera.position.set(0,0,70);
+  const renderer=new THREE.WebGLRenderer({powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.domElement.id='bg';
+  renderer.domElement.setAttribute('aria-hidden','true');
+  document.body.prepend(renderer.domElement);
+  const controls=new OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true;controls.autoRotate=true;controls.autoRotateSpeed=2.0;
+
+  // POST PROCESSING
+  const composer=new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene,camera));
+  const bloomPass=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),1.5,0.4,0.85);
+  bloomPass.strength=1.8;bloomPass.radius=0.4;bloomPass.threshold=0;
+  composer.addPass(bloomPass);
+
+  // INSTANCED PARTICLES
+  const mesh=new THREE.InstancedMesh(new THREE.TetrahedronGeometry(0.25),new THREE.MeshBasicMaterial({color:0xffffff}),COUNT);
+  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(mesh);
+  const dummy=new THREE.Object3D(),color=new THREE.Color();
+
+  // Per-particle values that never change are computed once.
+  const px=new Float32Array(COUNT),py=new Float32Array(COUNT),pz=new Float32Array(COUNT);
+  const layerA=new Uint8Array(COUNT),radiusA=new Float32Array(COUNT);
+  const sinPhiA=new Float32Array(COUNT),cosPhiA=new Float32Array(COUNT),phiA=new Float32Array(COUNT);
+  const thetaBaseA=new Float32Array(COUNT),randBA=new Float32Array(COUNT),randCA=new Float32Array(COUNT),hueA=new Float32Array(COUNT);
+  const surfR=PLANET,cloudR=PLANET+CLOUD_ALT,atmoR=PLANET+CLOUD_ALT*2.5+2;
+  const clamp=(v,a,b)=>Math.min(Math.max(v,a),b);
+  for(let i=0;i<COUNT;i++){
+    px[i]=(Math.random()-0.5)*100;py[i]=(Math.random()-0.5)*100;pz[i]=(Math.random()-0.5)*100;
+    const fi=i/COUNT,layer=fi<0.7?0:(fi<0.92?1:2);
+    const sA=Math.sin(i*12.9898)*43758.5453,randA=sA-Math.floor(sA);
+    const sB=Math.sin(i*78.233+3.1)*12345.678,randB=sB-Math.floor(sB);
+    const sC=Math.sin(i*45.164+7.7)*98765.432,randC=sC-Math.floor(sC);
+    const phi=Math.acos(1-2*randA),thetaBase=randB*Math.PI*2;
+    layerA[i]=layer;radiusA[i]=layer===0?surfR:(layer===1?cloudR:atmoR);
+    phiA[i]=phi;sinPhiA[i]=Math.sin(phi);cosPhiA[i]=Math.cos(phi);thetaBaseA[i]=thetaBase;randBA[i]=randB;randCA[i]=randC;
+    const continentNoise=Math.sin(thetaBase*4+randC*3)*Math.cos(phi*5+randA*4)+Math.sin(phi*8-thetaBase*2)*0.4;
+    const isLand=continentNoise>(1.2-LAND*2.4),isIce=Math.abs(Math.cos(phi))>0.82;
+    const surfaceHue=isIce?0.55:(isLand?0.28+randC*0.08:0.58);
+    const surfaceSat=isIce?0.1:(isLand?0.55:0.75);
+    const surfaceLight=isIce?0.92:(isLand?0.4:0.35);
+    hueA[i]=surfaceHue;
+    if(layer===0)color.setHSL(surfaceHue,surfaceSat,clamp(surfaceLight,0.02,0.95));
+    else if(layer===1)color.setHSL(surfaceHue,0.05,0.02);
+    else color.setHSL(0.56,0.6,clamp(Math.min(0.5+ATMO*0.15,0.85),0.02,0.95));
+    mesh.setColorAt(i,color);
+  }
+
+  // ANIMATION LOOP
+  const clock=new THREE.Clock(),cloudThreshold=1.3-CLOUD_DENSITY*2.2;
+  function animate(){
+    requestAnimationFrame(animate);
+    const time=clock.getElapsedTime()*SPEED_MULT;
+    controls.update();
+    for(let i=0;i<COUNT;i++){
+      const r=radiusA[i],theta=thetaBaseA[i]+time*ROT,sp=sinPhiA[i];
+      px[i]+=(r*sp*Math.cos(theta)-px[i])*0.1;
+      py[i]+=(r*cosPhiA[i]-py[i])*0.1;
+      pz[i]+=(r*sp*Math.sin(theta)-pz[i])*0.1;
+      dummy.position.set(px[i],py[i],pz[i]);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i,dummy.matrix);
+      if(layerA[i]===1){
+        const cloudNoise=Math.sin(thetaBaseA[i]*6+time*0.1+randBA[i]*5)*Math.cos(phiA[i]*7-time*0.08+randCA[i]*4);
+        color.setHSL(hueA[i],0.05,cloudNoise>cloudThreshold?0.92:0.02);
+        mesh.setColorAt(i,color);
+      }
+    }
+    mesh.instanceMatrix.needsUpdate=true;
+    mesh.instanceColor.needsUpdate=true;
+    composer.render();
+  }
+  animate();
+
+  addEventListener('resize',()=>{
+    camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);
+  });
+}
 </script>
 </body>
 </html>
