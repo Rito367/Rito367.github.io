@@ -69,8 +69,6 @@ td a{color:var(--pink);font-style:italic}
 .prompt input{width:100%;font:inherit;color:var(--ink);background:none;border:0;border-radius:0;outline:none;padding:0;line-height:18px}
 .prompt label{flex-shrink:0}
 .response{white-space:pre-wrap;overflow-wrap:anywhere;padding:8px 0}
-footer{text-align:center;font-size:12px;line-height:15px;padding:14px 0 30px}
-footer p{margin:0}
 .page-content{min-height:128px}
 .resource{border-bottom:1px solid #343e34;padding:16px 0}
 .resource h2{margin:0 0 10px}
@@ -147,14 +145,13 @@ fieldset,fieldset.links{width:100%}
 <h1 id="contact-title">&gt; contact</h1><div class="page-content"><p>You can find me on GitHub as <a href="https://github.com/Rito367">Rito367</a>.</p><p>For feedback or a bug in this website, <a href="https://github.com/Rito367/Rito367.github.io/issues">open an issue in the portfolio repository</a>.</p></div>
 </section>
 </main>
-<footer><p>source: <a href="https://github.com/Rito367/Rito367.github.io">github.com/Rito367/Rito367.github.io</a></p><p>© Rito <span id="year">2026</span> · inspired by <a href="https://ysap.sh/">ysap.sh</a></p></footer>
 </div>
 <script>
 'use strict';
 const pages=['home','resources','contact'];
 function route(){const requested=location.hash.slice(1)||'home';const page=pages.includes(requested)?requested:'home';pages.forEach(id=>{document.getElementById(id).hidden=id!==page});document.querySelectorAll('[data-page]').forEach(a=>{if(a.dataset.page===page)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});document.title=page==='home'?'Rito':'Rito | '+page;}
 window.addEventListener('hashchange',route);route();
-document.getElementById('year').textContent=new Date().getFullYear();
+document.querySelectorAll('a[href^="http"]').forEach(a=>{a.target='_blank';a.rel='noopener noreferrer'});
 const command='curl https://Rito367.github.io/portfolio.txt';
 const typed=document.getElementById('typed'),output=document.getElementById('terminal-output'),cursor=document.getElementById('boot-cursor');
 if(matchMedia('(prefers-reduced-motion: reduce)').matches){typed.textContent=command;cursor.hidden=true}else{output.hidden=true;let n=0;const timer=setInterval(()=>{typed.textContent=command.slice(0,++n);if(n>=command.length){clearInterval(timer);cursor.hidden=true;output.hidden=false}},24)}
