@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Rito's personal corner of the internet. AI, code, and projects.">
+<title>Rito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--ink:#ffd7af;--green:#87ff87;--cyan:#5fffff;--pink:#ff87af;--line:#87ff8755}
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:var(--ink);font:13px 'Fira Mono',monospace}
+#container{max-width:812px;padding:0 6px;margin:10px auto 0}
+nav{border-bottom:1px solid #343e34;margin-bottom:21px}
+nav ul{list-style:none;padding:0;margin:0;display:flex}
+nav li:last-child{margin-left:auto}
+nav a{display:block;padding:14px 13px;color:var(--ink);text-decoration:none}
+nav a[aria-current=page]{color:var(--green)}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:1px solid var(--green);outline-offset:4px}
+h1{font-size:26px;font-weight:700;color:var(--green);margin:0 0 21px}
+h2{font-size:15px;color:var(--green);font-weight:500}
+p{margin:0 0 15px;line-height:1.2}
+em{color:var(--green)}
+.intro{min-height:128px}
+.avatar{float:right;border-radius:50%;width:128px;height:128px;margin:0 0 10px 32px;object-fit:cover;background:#111}
+.intro p{max-width:620px}
+.socials{text-align:center;margin:8px 0 10px;clear:both}
+.terminal{position:relative;background:#111;border:1px solid var(--line);padding:5px;min-height:477px;box-shadow:0 0 110px 20px #87ff870e;font:13px/15px 'Fira Mono',monospace;overflow:hidden}
+.command{height:30px;white-space:nowrap;overflow:hidden}
+.cursor{display:inline-block;width:8px;height:14px;background:var(--ink);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.output{padding:9px 15px 24px;animation:appear .3s ease}
+@keyframes appear{from{opacity:0}to{opacity:1}}
+.banner{display:flex;gap:48px;align-items:center;margin:0 24px 12px}
+.pixel-logo{width:228px;flex-shrink:0}
+.pixel-logo svg{display:block;width:100%;height:auto}
+.stripes{height:24px;margin-top:8px;background:linear-gradient(#d70000 0 25%,#ff3b00 25% 50%,#ff8700 50% 75%,#ffbf00 75%)}
+.banner-copy{min-width:0}
+.banner-copy p{margin:0 0 15px;line-height:15px}
+.green{color:var(--green)}.cyan{color:var(--cyan)}.pink{color:var(--pink)}.muted{color:#777}
+.news{margin:0 0 28px}
+.news p{margin:15px 0 0}
+.panels{display:flex;gap:14px;margin:0 -12px 10px;align-items:stretch}
+fieldset{border:1px solid #626262;margin:0;min-width:0;padding:12px 11px 20px;width:236px}
+legend{padding:0 2px}
+fieldset p{line-height:15px;margin:0;color:var(--cyan)}
+fieldset.links{width:315px}
+table{border-collapse:collapse;width:100%;color:var(--pink);font-size:inherit}
+td{vertical-align:top;padding:0 10px 0 0;line-height:15px}
+td+td{border-left:1px solid #626262;padding-left:12px}
+td a{color:var(--pink);font-style:italic}
+.legend-title{margin-bottom:15px}
+.commands{display:grid;grid-template-columns:180px 1fr}
+.commands span{color:var(--green)}
+.commands em{color:var(--cyan)}
+.prompt{display:flex;align-items:center;gap:8px;padding-top:7px}
+.prompt input{width:100%;font:inherit;color:var(--ink);background:none;border:0;border-radius:0;outline:none;padding:0;line-height:18px}
+.prompt label{flex-shrink:0}
+.response{white-space:pre-wrap;overflow-wrap:anywhere;padding:8px 0}
+footer{text-align:center;font-size:12px;line-height:15px;padding:14px 0 30px}
+footer p{margin:0}
+.page-content{min-height:128px}
+.resource{border-bottom:1px solid #343e34;padding:16px 0}
+.resource h2{margin:0 0 10px}
+.resource p{margin:0 0 10px}
+[hidden]{display:none!important}
+@media(max-width:650px){
+#container{padding:0 14px;margin-top:5px}
+.avatar{width:80px;height:80px;margin-left:15px}
+h1{font-size:23px}
+.intro{min-height:140px}
+.banner{gap:22px;margin:4px 0 18px;flex-wrap:wrap}
+.pixel-logo{width:180px}
+.banner-copy p{overflow-wrap:anywhere}
+.terminal{min-height:0}
+.output{padding:8px 10px 18px}
+.panels{flex-direction:column;margin:0 0 14px}
+fieldset,fieldset.links{width:100%}
+.commands{grid-template-columns:95px 1fr;gap:4px}
+.news{margin-bottom:20px}
+.socials{line-height:23px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="container">
+<nav aria-label="Main navigation"><ul>
+<li><a href="#home" data-page="home" aria-current="page">home</a></li>
+<li><a href="#resources" data-page="resources">resources</a></li>
+<li><a href="#contact" data-page="contact">contact</a></li>
+</ul></nav>
+<main>
+<section id="home" aria-labelledby="home-title">
+<h1 id="home-title">&gt; Rito</h1>
+<div class="intro">
+<img class="avatar" src="https://avatars.githubusercontent.com/u/323446796?s=256" width="128" height="128" alt="Rito's GitHub avatar">
+<p>Yo what's up everyone, my name's Rito. Welcome to my corner of the internet!</p>
+<p>This is the site for my projects, where I experiment with <em>AI</em>, build things with code, and learn along the way.</p>
+<p>** My portfolio is now live! ** Explore what I'm working on below, or find my public repositories on <a href="https://github.com/Rito367?tab=repositories">GitHub</a>.</p>
+</div>
+<div class="socials"><a href="https://github.com/Rito367">GitHub</a> | <a href="#resources">Projects</a> | <a href="https://github.com/Rito367?tab=repositories">Repositories</a> | <a href="#contact">Contact</a></div>
+<div class="terminal" aria-label="Interactive portfolio terminal">
+<div class="command"><span>$ </span><span id="typed"></span><span id="boot-cursor" class="cursor" aria-hidden="true"></span></div>
+<div id="terminal-output" class="output">
+<div class="banner">
+<div class="pixel-logo" aria-label="Rito"><svg viewBox="0 0 29 7" role="img" aria-label="RITO" shape-rendering="crispEdges"><path fill="#ffd7af" d="M0 0h5v1H0z M0 1h1v5H0z M5 1h1v2H5z M1 3h4v1H1z M3 4h1v1H3z M4 5h1v1H4z M5 6h1v1H5z M0 6h1v1H0z M8 0h5v1H8z M10 1h1v5h-1z M8 6h5v1H8z M15 0h6v1h-6z M17 1h2v6h-2z M24 0h4v1h-4z M23 1h1v5h-1z M28 1h1v5h-1z M24 6h4v1h-4z"/></svg><div class="stripes"></div></div>
+<div class="banner-copy"><p>Rito's corner of the internet<br>AI, code, and personal projects<br><a href="https://github.com/Rito367">github.com/Rito367</a></p><p>src: <a href="https://github.com/Rito367/Rito367.github.io">portfolio repository</a></p></div>
+</div>
+<div class="news">News<p><span class="muted">2026-10-04</span> My <span class="green">personal portfolio</span> is now online!</p></div>
+<div class="panels">
+<fieldset><legend>About</legend><p>Hey, I'm Rito. I like building AI assistants, trying new ideas, and making useful things. This is where my projects live.</p></fieldset>
+<fieldset class="links"><legend>Links</legend><table aria-label="Rito's links"><tbody>
+<tr><td>GitHub</td><td><a href="https://github.com/Rito367">github.com/Rito367</a></td></tr>
+<tr><td>Projects</td><td><a href="#resources">explore my projects</a></td></tr>
+<tr><td>Source</td><td><a href="https://github.com/Rito367/Rito367.github.io">this website's code</a></td></tr>
+<tr><td>Contact</td><td><a href="#contact">find me online</a></td></tr>
+</tbody></table></fieldset>
+</div>
+<div class="legend-title">Legend</div>
+<div class="commands"><span>$ help</span><em>Get the list of available commands</em><span>$ projects</span><em>Explore what I'm building</em><span>$ about</span><em>A little more about me</em></div>
+</div>
+<div id="history" aria-live="polite" aria-relevant="additions"></div>
+<form class="prompt" id="terminal-form"><label for="terminal-input">$</label><input id="terminal-input" aria-label="Terminal command, type help to get started" autocomplete="off" autocapitalize="off" spellcheck="false"></form>
+</div>
+</section>
+<section id="resources" aria-labelledby="resources-title" hidden>
+<h1 id="resources-title">&gt; resources</h1><p>A place for my projects and repository links.</p>
+<article class="resource"><h2>Project Wonyoung</h2><p>My personal AI assistant project, with voice, memory, personality, and computer skills.</p><span class="muted">In development · private repository</span></article>
+<article class="resource"><h2>Rito367.github.io</h2><p>The source code for this portfolio. A small, terminal-style home for my work.</p><a href="https://github.com/Rito367/Rito367.github.io">View repository →</a></article>
+<article class="resource"><h2>Public repositories</h2><p>Find my latest public code on GitHub.</p><a href="https://github.com/Rito367?tab=repositories">Browse GitHub →</a></article>
+</section>
+<section id="contact" aria-labelledby="contact-title" hidden>
+<h1 id="contact-title">&gt; contact</h1><div class="page-content"><p>You can find me on GitHub as <a href="https://github.com/Rito367">Rito367</a>.</p><p>For feedback or a bug in this website, <a href="https://github.com/Rito367/Rito367.github.io/issues">open an issue in the portfolio repository</a>.</p></div>
+</section>
+</main>
+<footer><p>source: <a href="https://github.com/Rito367/Rito367.github.io">github.com/Rito367/Rito367.github.io</a></p><p>© Rito <span id="year">2026</span> · inspired by <a href="https://ysap.sh/">ysap.sh</a></p></footer>
+</div>
+<script>
+'use strict';
+const pages=['home','resources','contact'];
+function route(){const requested=location.hash.slice(1)||'home';const page=pages.includes(requested)?requested:'home';pages.forEach(id=>{document.getElementById(id).hidden=id!==page});document.querySelectorAll('[data-page]').forEach(a=>{if(a.dataset.page===page)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});document.title=page==='home'?'Rito':'Rito | '+page;}
+window.addEventListener('hashchange',route);route();
+document.getElementById('year').textContent=new Date().getFullYear();
+const command='curl https://Rito367.github.io/portfolio.txt';
+const typed=document.getElementById('typed'),output=document.getElementById('terminal-output'),cursor=document.getElementById('boot-cursor');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){typed.textContent=command;cursor.hidden=true}else{output.hidden=true;let n=0;const timer=setInterval(()=>{typed.textContent=command.slice(0,++n);if(n>=command.length){clearInterval(timer);cursor.hidden=true;output.hidden=false}},24)}
+const input=document.getElementById('terminal-input'),history=document.getElementById('history');let previous=[],position=0;
+const replies={help:'Available commands: help, about, projects, github, contact, clear.','about':"I'm Rito. I build AI projects, experiment with code, and learn by making things.",'projects':'Project Wonyoung — personal AI assistant (private).\nRito367.github.io — this portfolio.\nSelect resources above to explore.','github':'https://github.com/Rito367','contact':'Find me at https://github.com/Rito367\nWebsite feedback: use the portfolio repository issues.'};
+document.getElementById('terminal-form').addEventListener('submit',event=>{event.preventDefault();const raw=input.value.trim();if(!raw)return;previous.push(raw);position=previous.length;input.value='';const cmd=raw.toLowerCase();if(cmd==='clear'){history.replaceChildren();output.hidden=true;return;}const row=document.createElement('div');row.className='response';const line=document.createElement('div');line.className='green';line.textContent='$ '+raw;const answer=document.createElement('div');answer.textContent=replies[cmd]||'Command not found: '+raw+'. Type help for available commands.';row.append(line,answer);history.append(row);input.scrollIntoView({block:'nearest'});});
+input.addEventListener('keydown',event=>{if(event.key==='ArrowUp'){event.preventDefault();position=Math.max(0,position-1);input.value=previous[position]||''}else if(event.key==='ArrowDown'){event.preventDefault();position=Math.min(previous.length,position+1);input.value=previous[position]||''}});
+</script>
+</body>
+</html>
