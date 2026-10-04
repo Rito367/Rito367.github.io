@@ -100,10 +100,24 @@ h1{font-size:23px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important}html{scroll-behavior:auto}}
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.55}
+#gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:opacity .5s ease,visibility .5s ease,transform .5s ease;cursor:pointer;padding:20px}
+#gate.gate-hide{opacity:0;visibility:hidden;transform:scale(1.04);pointer-events:none}
+.gate-card{background:#0a0a0a;border:1px solid var(--green);box-shadow:0 0 60px rgba(135,255,135,0.22),inset 0 0 30px rgba(135,255,135,0.04);padding:36px 42px;text-align:center;max-width:440px;width:100%;cursor:default}
+.gate-title{font-size:24px;font-weight:700;color:var(--green);margin:0 0 10px;letter-spacing:3px}
+.gate-sub{color:var(--ink);font-size:13px;margin:0 0 24px;line-height:1.5}
+.gate-btn{display:inline-block;font:inherit;font-size:14px;font-weight:700;color:#000;background:var(--green);border:0;padding:12px 28px;cursor:pointer;letter-spacing:1px;box-shadow:0 0 25px rgba(135,255,135,0.45);transition:all .2s ease}
+.gate-btn:hover{background:var(--cyan);box-shadow:0 0 30px rgba(95,255,255,0.6);transform:scale(1.04)}
 </style>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
+<div id="gate" role="dialog" aria-modal="true" aria-label="Enter site">
+<div class="gate-card">
+<div class="gate-title">&gt; RITO</div>
+<p class="gate-sub">Personal portfolio &amp; AI projects</p>
+<button type="button" id="enter-btn" class="gate-btn">[ CLICK TO ENTER ]</button>
+</div>
+</div>
 <div id="container">
 <main class="layout">
 
@@ -165,7 +179,13 @@ h1{font-size:23px}
 document.querySelectorAll('a[href^="http"]').forEach(a=>{a.target='_blank';a.rel='noopener noreferrer'});
 const command='curl https://Rito367.github.io/portfolio.txt';
 const typed=document.getElementById('typed'),output=document.getElementById('terminal-output'),cursor=document.getElementById('boot-cursor');
-if(matchMedia('(prefers-reduced-motion: reduce)').matches){typed.textContent=command;cursor.hidden=true}else{output.hidden=true;let n=0;const timer=setInterval(()=>{typed.textContent=command.slice(0,++n);if(n>=command.length){clearInterval(timer);cursor.hidden=true;output.hidden=false}},24)}
+let terminalStarted=false;
+function startTerminal(){
+  if(terminalStarted)return;
+  terminalStarted=true;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){typed.textContent=command;cursor.hidden=true;output.hidden=false}
+  else{output.hidden=true;let n=0;const timer=setInterval(()=>{typed.textContent=command.slice(0,++n);if(n>=command.length){clearInterval(timer);cursor.hidden=true;output.hidden=false}},24)}
+}
 const input=document.getElementById('terminal-input'),history=document.getElementById('history');let previous=[],position=0;
 const replies={help:'Available commands: help, about, projects, github, contact, clear.','about':"I'm Rito. I build AI projects, experiment with code, and learn by making things.",'projects':'Project Wonyoung — personal AI assistant (private).\nRito367.github.io — this portfolio.\nSee the Projects panel for more.','github':'https://github.com/Rito367','contact':'Find me at https://github.com/Rito367\nWebsite feedback: use the portfolio repository issues.'};
 document.getElementById('terminal-form').addEventListener('submit',event=>{event.preventDefault();const raw=input.value.trim();if(!raw)return;previous.push(raw);position=previous.length;input.value='';const cmd=raw.toLowerCase();if(cmd==='clear'){history.replaceChildren();output.hidden=true;return;}const row=document.createElement('div');row.className='response';const line=document.createElement('div');line.className='green';line.textContent='$ '+raw;const answer=document.createElement('div');answer.textContent=replies[cmd]||'Command not found: '+raw+'. Type help for available commands.';row.append(line,answer);history.append(row);input.scrollIntoView({block:'nearest'});});
@@ -178,11 +198,34 @@ soundBtn.addEventListener('click',toggleSound);
 document.querySelector('.player .frame').addEventListener('click',toggleSound);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&video&&video.paused)video.play().catch(()=>{})});
 if(video){
-  const setStart=()=>{if(video.currentTime<START_AT)video.currentTime=START_AT;video.play().catch(()=>{});updateSoundBtn()};
-  if(video.readyState>=1)setStart();
-  else video.addEventListener('loadedmetadata',setStart,{once:true});
   video.addEventListener('timeupdate',()=>{if(video.duration&&video.currentTime>=video.duration-0.2){video.currentTime=START_AT;video.play().catch(()=>{})}});
   video.addEventListener('ended',()=>{video.currentTime=START_AT;video.play().catch(()=>{})});
+}
+const gate=document.getElementById('gate');
+let entered=false;
+function enterSite(){
+  if(entered)return;
+  entered=true;
+  if(gate){
+    gate.classList.add('gate-hide');
+    setTimeout(()=>{if(gate)gate.remove()},600);
+  }
+  if(video){
+    video.currentTime=START_AT;
+    video.muted=false;
+    video.volume=1.0;
+    video.play().catch(()=>{});
+    updateSoundBtn();
+  }
+  startTerminal();
+}
+if(gate){
+  gate.addEventListener('click',enterSite);
+  const enterBtn=document.getElementById('enter-btn');
+  if(enterBtn)enterBtn.addEventListener('click',enterSite);
+  window.addEventListener('keydown',e=>{if(!entered&&e.key!=='Tab')enterSite()});
+}else{
+  startTerminal();
 }
 </script>
 <script type="module">
