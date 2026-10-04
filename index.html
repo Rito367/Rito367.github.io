@@ -30,6 +30,13 @@ em{color:var(--green)}
 .avatar{float:right;border-radius:50%;width:128px;height:128px;margin:0 0 10px 32px;object-fit:cover;background:#111}
 .intro p{max-width:620px}
 .socials{text-align:center;margin:8px 0 10px;clear:both}
+.player{width:100%;margin:0 0 21px;padding:12px 11px 14px;box-shadow:0 0 110px 20px #87ff870e;background:#111}
+.player .frame{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line)}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player .now{margin:10px 0 0;line-height:15px;color:var(--cyan)}
+.player .frame>div,.player .frame>iframe{position:absolute;inset:0;width:100%;height:100%}
+.sound{margin:10px 0 0;font:inherit;color:#000;background:var(--green);border:0;padding:5px 10px;cursor:pointer}
+.sound:hover{background:var(--cyan)}
 .terminal{position:relative;background:#111;border:1px solid var(--line);padding:5px;min-height:477px;box-shadow:0 0 110px 20px #87ff870e;font:13px/15px 'Fira Mono',monospace;overflow:hidden}
 .command{height:30px;white-space:nowrap;overflow:hidden}
 .cursor{display:inline-block;width:8px;height:14px;background:var(--ink);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
@@ -105,6 +112,7 @@ fieldset,fieldset.links{width:100%}
 <p>** My portfolio is now live! ** Explore what I'm working on below, or find my public repositories on <a href="https://github.com/Rito367?tab=repositories">GitHub</a>.</p>
 </div>
 <div class="socials"><a href="https://github.com/Rito367">GitHub</a> | <a href="#resources">Projects</a> | <a href="https://github.com/Rito367?tab=repositories">Repositories</a> | <a href="#contact">Contact</a></div>
+<fieldset class="player"><legend>Now playing</legend><div class="frame"><div id="yt-player"></div></div><button type="button" id="sound-btn" class="sound" hidden>[ click for sound ]</button><p class="now">♪ 告五人 Accusefive — 帶我去找夜生活 Night life.Take us to the light · <a href="https://www.youtube.com/watch?v=W9Fq1HC_5hg">watch on YouTube</a></p></fieldset>
 <div class="terminal" aria-label="Interactive portfolio terminal">
 <div class="command"><span>$ </span><span id="typed"></span><span id="boot-cursor" class="cursor" aria-hidden="true"></span></div>
 <div id="terminal-output" class="output">
@@ -154,6 +162,13 @@ const input=document.getElementById('terminal-input'),history=document.getElemen
 const replies={help:'Available commands: help, about, projects, github, contact, clear.','about':"I'm Rito. I build AI projects, experiment with code, and learn by making things.",'projects':'Project Wonyoung — personal AI assistant (private).\nRito367.github.io — this portfolio.\nSelect resources above to explore.','github':'https://github.com/Rito367','contact':'Find me at https://github.com/Rito367\nWebsite feedback: use the portfolio repository issues.'};
 document.getElementById('terminal-form').addEventListener('submit',event=>{event.preventDefault();const raw=input.value.trim();if(!raw)return;previous.push(raw);position=previous.length;input.value='';const cmd=raw.toLowerCase();if(cmd==='clear'){history.replaceChildren();output.hidden=true;return;}const row=document.createElement('div');row.className='response';const line=document.createElement('div');line.className='green';line.textContent='$ '+raw;const answer=document.createElement('div');answer.textContent=replies[cmd]||'Command not found: '+raw+'. Type help for available commands.';row.append(line,answer);history.append(row);input.scrollIntoView({block:'nearest'});});
 input.addEventListener('keydown',event=>{if(event.key==='ArrowUp'){event.preventDefault();position=Math.max(0,position-1);input.value=previous[position]||''}else if(event.key==='ArrowDown'){event.preventDefault();position=Math.min(previous.length,position+1);input.value=previous[position]||''}});
+// Music video: browsers only allow autoplay when muted, so start muted and unmute on the first user gesture.
+let ytPlayer=null,unlocked=false,gesture=false;const soundBtn=document.getElementById('sound-btn');
+function unlockSound(){gesture=true;if(unlocked||!ytPlayer||!ytPlayer.unMute)return;unlocked=true;ytPlayer.unMute();ytPlayer.setVolume(100);ytPlayer.playVideo();soundBtn.hidden=true;['pointerdown','keydown','touchstart'].forEach(t=>document.removeEventListener(t,unlockSound,true))}
+['pointerdown','keydown','touchstart'].forEach(t=>document.addEventListener(t,unlockSound,true));
+soundBtn.addEventListener('click',unlockSound);
+window.onYouTubeIframeAPIReady=()=>{ytPlayer=new YT.Player('yt-player',{videoId:'W9Fq1HC_5hg',host:'https://www.youtube-nocookie.com',playerVars:{autoplay:1,mute:1,loop:1,playlist:'W9Fq1HC_5hg',playsinline:1,rel:0},events:{onReady:e=>{e.target.mute();e.target.playVideo();if(gesture)unlockSound();else soundBtn.hidden=false},onStateChange:e=>{if(e.data===YT.PlayerState.ENDED)e.target.playVideo()}}})};
+const ytScript=document.createElement('script');ytScript.src='https://www.youtube.com/iframe_api';document.head.append(ytScript);
 </script>
 </body>
 </html>
